@@ -6,16 +6,6 @@ namespace BattleCity
 {
     class Bullet : DynamicObject
     {
-        #region Fields & Properties
-
-        public override (int, int) Position { get; set; }
-        public override Field Field { get; set; }
-        public override Directions Direction { get; set; }
-        public override Game GGame { get; set; }
-
-
-        #endregion
-
         #region Constructors
 
         public Bullet() { }

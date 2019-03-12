@@ -9,12 +9,6 @@ namespace BattleCity
     {
         #region Fields & Properties
 
-        public override (int, int) Position { get; set; }
-        public override Field Field { get; set; }
-        public override Directions Direction { get; set; }
-        public override Game GGame { get; set; }
-
-
         public Directions? _nextStep = null;
         public bool _nextShot = false;
 

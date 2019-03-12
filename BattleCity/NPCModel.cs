@@ -8,12 +8,7 @@ namespace BattleCity
     {
         #region Fields & Properties
 
-        public override (int, int) Position { get; set; }
         public PlayerModel Player { get; set; }
-        public override Field Field { get; set; }
-        public override Directions Direction { get; set; }
-        public override Game GGame { get; set; }
-
         private byte _health = 3;
         public byte Health
         {
@@ -49,9 +44,7 @@ namespace BattleCity
         }
 
         #endregion
-
-        public void AIAct()
-        {
+        
             /*
              todo:
              1. if the player is online:
@@ -76,7 +69,7 @@ namespace BattleCity
                         - if the opposite direction to the Player contains the wall:
                             - go the second opposite direction
             */
-        }
+        
         public void AIMove()
         {
             (bool horizontal, bool wMore, bool vertical, bool hMore) _PlayerOnLine = CheckForPlayerOnLine();
