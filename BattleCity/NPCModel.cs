@@ -44,36 +44,36 @@ namespace BattleCity
         }
 
         #endregion
-        
-            /*
-             todo:
-             1. if the player is online:
-                - if the path contains a wall:
-                    - go up/down;
 
-                - if the path contains a bullet && the bullet goes towards:
-                    - go up/down;
+        /*
+         todo:
+         1. if the player is online:
+            - if the path contains a wall:
+                - go up/down;
 
-                -else:
-                    - return;
-                
-                COMING SOON:
-                - if the path contains an NPC:
-                    - return;
+            - if the path contains a bullet && the bullet goes towards:
+                - go up/down;
 
-             2. if the player is not online:
-                - if the shortest path to the Player contains the wall:
-                    - go by the second path
-                    - if the second path to the Player contains the wall:
-                        - go the opposite direction
-                        - if the opposite direction to the Player contains the wall:
-                            - go the second opposite direction
-            */
-        
+            -else:
+                - return;
+
+            COMING SOON:
+            - if the path contains an NPC:
+                - return;
+
+         2. if the player is not online:
+            - if the shortest path to the Player contains the wall:
+                - go by the second path
+                - if the second path to the Player contains the wall:
+                    - go the opposite direction
+                    - if the opposite direction to the Player contains the wall:
+                        - go the second opposite direction
+        */
+
         public void AIMove()
         {
-            (bool horizontal, bool wMore, bool vertical, bool hMore) _PlayerOnLine = CheckForPlayerOnLine();
-            // (bool horizontal, bool wMore, bool vertical, bool hMore)
+            (bool horizontal, bool wMore, bool vertical, bool hMore) _PlayerOnLine = _CheckForPlayerOnLine();
+
             if (!(_PlayerOnLine.horizontal || _PlayerOnLine.vertical))
             {
                 this._Move();
@@ -82,178 +82,125 @@ namespace BattleCity
             {
                 if (_PlayerOnLine.vertical)
                 {
-                    if (_PlayerOnLine.hMore)
+                    if (_PlayerOnLine.hMore && this.Direction != Directions.Down)
                     {
-                        if (this.Direction != Directions.Down)
-                        {
-                            this.Field.map[this.Position.Item1, this.Position.Item2].Rotate(Directions.Down, TypeOfBlock.NPC);
-                            this.Direction = Directions.Down;
-                        }
+                        this._RotateSelf(Directions.Down);
                     }
-                    else
+                    else if (!_PlayerOnLine.hMore && this.Direction != Directions.Up)
                     {
-                        if (this.Direction != Directions.Up)
-                        {
-                            this.Field.map[this.Position.Item1, this.Position.Item2].Rotate(Directions.Up, TypeOfBlock.NPC);
-                            this.Direction = Directions.Up;
-                        }
+                        this._RotateSelf(Directions.Up);
                     }
                 }
                 else if (_PlayerOnLine.horizontal)
                 {
-                    if (_PlayerOnLine.wMore)
+                    if (_PlayerOnLine.wMore && this.Direction != Directions.RIght)
                     {
-                        if (this.Direction != Directions.RIght)
-                        {
-                            this.Field.map[this.Position.Item1, this.Position.Item2].Rotate(Directions.RIght, TypeOfBlock.NPC);
-                            this.Direction = Directions.RIght;
-                        }
+                        this._RotateSelf(Directions.RIght);
                     }
-                    else
+                    else if (!_PlayerOnLine.wMore && this.Direction != Directions.Left)
                     {
-                        if (this.Direction != Directions.Left)
-                        {
-                            this.Field.map[this.Position.Item1, this.Position.Item2].Rotate(Directions.Left, TypeOfBlock.NPC);
-                            this.Direction = Directions.Left;
-                        }
+                        this._RotateSelf(Directions.Left);
                     }
                 }
             }
-
-            //code
-
         }
+
         public void AIShoot()
         {
-            (bool horizontal, bool wMore, bool vertical, bool hMore) _PlayerOnLine = CheckForPlayerOnLine();
+            (bool horizontal, bool wMore, bool vertical, bool hMore) _PlayerOnLine = _CheckForPlayerOnLine();
+
 
             if (_PlayerOnLine.vertical)
             {
-                if (_PlayerOnLine.hMore)
+                if (_PlayerOnLine.hMore && this.Direction == Directions.Down 
+                    || !_PlayerOnLine.hMore && this.Direction == Directions.Up)
                 {
-                    if (this.Direction == Directions.Down)
-                    {
-                        _Shoot();
-                    }
-                    else
-                    {
-                        return;
-                    }
-                }
-                else
-                {
-                    if (this.Direction == Directions.Up)
-                    {
-                        _Shoot();
-                    }
-                    else
-                    {
-                        return;
-                    }
+                    _Shoot();
                 }
             }
             else if (_PlayerOnLine.horizontal)
             {
-                if (_PlayerOnLine.wMore)
+                if (_PlayerOnLine.wMore && this.Direction == Directions.RIght
+                    || !_PlayerOnLine.wMore && this.Direction == Directions.Left)
                 {
-                    if (this.Direction == Directions.RIght)
-                    {
-                        _Shoot();
-                    }
-                    else
-                    {
-                        return;
-                    }
-                }
-                else
-                {
-                    if (this.Direction == Directions.Left)
-                    {
-                        _Shoot();
-                    }
-                    else
-                    {
-                        return;
-                    }
+                    _Shoot();
                 }
             }
-
             
-
-            return;
         }
 
         private void _Shoot()
         {
-            (int, int) nextPosition = GetPosition(this.Position, this.Direction);
+            (int Y, int X) nextPosition = _GetPosition(this.Position, this.Direction);
 
-            if (this.Field.map[nextPosition.Item1, nextPosition.Item2].Type == TypeOfBlock.EmptyCell)
+            switch (this.Field.map[nextPosition.Y, nextPosition.X].Type)
             {
-                this.Field.map[nextPosition.Item1, nextPosition.Item2] = new Block(TypeOfBlock.Bullet, model: null, direction: this.Direction);
-                this.GGame.Bullets.Add(new Bullet(nextPosition, this.Field, this.Direction, this.GGame));
-            }
-            else if (this.Field.map[nextPosition.Item1, nextPosition.Item2].Type != TypeOfBlock.Wall)
-            {
-                switch (this.Field.map[nextPosition.Item1, nextPosition.Item2].Type)
-                {
-                    case TypeOfBlock.Player:
-                        ((PlayerModel)this.Field.map[nextPosition.Item1, nextPosition.Item2].Model).Health--;
-                        break;
-                    case TypeOfBlock.NPC:
-                        ((NPCModel)this.Field.map[nextPosition.Item1, nextPosition.Item2].Model).Health--;
-                        break;
-                    case TypeOfBlock.Bullet:
-                        ((Bullet)this.Field.map[nextPosition.Item1, nextPosition.Item2].Model).Die();
-                        break;
-                    case TypeOfBlock.BrickWall:
-                        this.Field.map[nextPosition.Item1, nextPosition.Item2].Health--;
-                        break;
-                    default:
-                        break;
-                }
+                case TypeOfBlock.EmptyCell:
+                    this.Field.map[nextPosition.Y, nextPosition.X] = new Block(TypeOfBlock.Bullet, model: null, direction: this.Direction);
+                    this.GGame.Bullets.Add(new Bullet(nextPosition, this.Field, this.Direction, this.GGame));
+                    break;
+
+                case TypeOfBlock.Player:
+                    ((PlayerModel)this.Field.map[nextPosition.Y, nextPosition.X].Model).Health--;
+                    break;
+
+                case TypeOfBlock.NPC:
+                    ((NPCModel)this.Field.map[nextPosition.Y, nextPosition.X].Model).Health--;
+                    break;
+
+                case TypeOfBlock.Bullet:
+                    ((Bullet)this.Field.map[nextPosition.Y, nextPosition.X].Model).Die();
+                    break;
+
+                case TypeOfBlock.BrickWall:
+                    this.Field.map[nextPosition.Y, nextPosition.X].Health--;
+                    break;
+
+                default:
+                    break;
             }
         }
 
         private void _Move()
         {
-            (int, int, Directions) _nextStep = (this.Position.Item1,this.Position.Item2, this.Direction);
+            (int, int, Directions) _nextStep = (this.Position.Y, this.Position.X, this.Direction);
 
-            if (Math.Abs((this.Position.Item1 - this.Player.Position.Item1)) < Math.Abs((this.Position.Item2 - this.Player.Position.Item2)))
+            // defining the shortest STRAIGHT path to the Player
+            if (Math.Abs((this.Position.Y - this.Player.Position.Item1)) < Math.Abs((this.Position.X - this.Player.Position.Item2)))
             {
-                if (this.Position.Item1 > this.Player.Position.Item1)
+                if (this.Position.Y > this.Player.Position.Item1)
                 {
-                    _nextStep = (this.Position.Item1 - 1, this.Position.Item2, Directions.Up);
+                    _nextStep = (this.Position.Y - 1, this.Position.X, Directions.Up);
                 }
-                else if (this.Position.Item1 < this.Player.Position.Item1)
+                else if (this.Position.Y < this.Player.Position.Item1)
                 {
-                    _nextStep = (this.Position.Item1 + 1, this.Position.Item2, Directions.Down);
+                    _nextStep = (this.Position.Y + 1, this.Position.X, Directions.Down);
                 }
-
             }
             else
             {
-                if (this.Position.Item2 > this.Player.Position.Item2)
+                if (this.Position.X > this.Player.Position.Item2)
                 {
-                    _nextStep = (this.Position.Item1, this.Position.Item2 - 1, Directions.Left);
+                    _nextStep = (this.Position.Y, this.Position.X - 1, Directions.Left);
                 }
-                else if (this.Position.Item2 < this.Player.Position.Item2)
+                else if (this.Position.X < this.Player.Position.Item2)
                 {
-                    _nextStep = (this.Position.Item1, this.Position.Item2 + 1, Directions.RIght);
+                    _nextStep = (this.Position.Y, this.Position.X + 1, Directions.RIght);
                 }
             }
 
+            // rotate or move
             if (this.Direction != _nextStep.Item3)
             {
-                this.Field.map[this.Position.Item1, this.Position.Item2].Rotate(_nextStep.Item3, TypeOfBlock.NPC);
-                this.Direction = _nextStep.Item3;
+                this._RotateSelf(_nextStep.Item3);
             }
             else
             {
                 if (this.Field.map[_nextStep.Item1, _nextStep.Item2].Type == TypeOfBlock.EmptyCell)
                 {
 
-                    this.Field.map[_nextStep.Item1, _nextStep.Item2] = this.Field.map[this.Position.Item1, this.Position.Item2];
-                    this.Field.map[this.Position.Item1, this.Position.Item2].TurnToEmpty();
+                    this.Field.map[_nextStep.Item1, _nextStep.Item2] = this.Field.map[this.Position.Y, this.Position.X];
+                    this.Field.map[this.Position.Y, this.Position.X].TurnToEmpty();
 
                     this.Position = (_nextStep.Item1, _nextStep.Item2);
                 }
@@ -261,65 +208,29 @@ namespace BattleCity
 
             return;
         }
-
-        private (int, int) GetPosition((int, int) position, Directions? direction)
+        
+        private void _RotateSelf(Directions direction)
         {
-            (int, int) res = (0 + position.Item1, 0 + position.Item2);
-
-            switch (direction)
-            {
-                case Directions.Up:
-                    res.Item1--;
-                    break;
-                case Directions.RIght:
-                    res.Item2++;
-                    break;
-                case Directions.Down:
-                    res.Item1++;
-                    break;
-                case Directions.Left:
-                    res.Item2--;
-                    break;
-                default:
-                    break;
-            }
-
-            if (res.Item1 == -1)
-            {
-                res.Item1 = 14;
-            }
-            else if (res.Item1 == 15)
-            {
-                res.Item1 = 0;
-            }
-            else if (res.Item2 == -1)
-            {
-                res.Item2 = 59;
-            }
-            else if (res.Item2 == 60)
-            {
-                res.Item2 = 0;
-            }
-            return res;
+            this.Field.map[ this.Position.Y, this.Position.X ].Rotate( direction: direction, type: TypeOfBlock.NPC );
+            this.Direction = direction;
         }
-
-
-        private (bool, bool, bool, bool) CheckForPlayerOnLine()
+        
+        private (bool, bool, bool, bool) _CheckForPlayerOnLine()
         {
             (bool horizontal, bool wMore, bool vertical, bool hMore) res = (false, false, false, false);
 
-            if (this.Player.Position.Item1 == this.Position.Item1)
+            if (this.Player.Position.Item1 == this.Position.Y)
             {
                 res.horizontal = true;
-                if (this.Player.Position.Item2 > this.Position.Item2)
+                if (this.Player.Position.Item2 > this.Position.X)
                 {
                     res.wMore = true;
                 }
             }
-            else if (this.Player.Position.Item2 == this.Position.Item2)
+            else if (this.Player.Position.Item2 == this.Position.X)
             {
                 res.vertical = true;
-                if (this.Player.Position.Item1 > this.Position.Item1)
+                if (this.Player.Position.Item1 > this.Position.Y)
                 {
                     res.hMore = true;
                 }
@@ -327,9 +238,12 @@ namespace BattleCity
 
             return res;
         }
+
+
+
         public override void Die()
         {
-            this.Field.map[this.Position.Item1, this.Position.Item2].TurnToEmpty();
+            this.Field.map[this.Position.Y, this.Position.X].TurnToEmpty();
             this.GGame.NPCs.Remove(this);
         }
     }

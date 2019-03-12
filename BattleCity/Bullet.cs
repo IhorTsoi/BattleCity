@@ -24,84 +24,46 @@ namespace BattleCity
 
         public void MoveBullet ()
         {
-            (int, int) nextPosition = GetPosition(position: this.Position, direction: this.Direction);
+            (int Y, int X) nextPosition = _GetPosition(position: this.Position, direction: this.Direction);
 
-            // if
-            if (this.Field.map[nextPosition.Item1, nextPosition.Item2].Type == TypeOfBlock.EmptyCell)
+
+            switch (this.Field.map[ nextPosition.Y, nextPosition.X ].Type)
             {
-                this.Field.map[nextPosition.Item1, nextPosition.Item2] = this.Field.map[this.Position.Item1, this.Position.Item2];
-                this.Field.map[this.Position.Item1, this.Position.Item2].TurnToEmpty();
+                case TypeOfBlock.EmptyCell:
+                    this.Field.map[nextPosition.Y, nextPosition.X] = this.Field.map[this.Position.Y, this.Position.X];
+                    this.Field.map[this.Position.Y, this.Position.X].TurnToEmpty();
 
-                this.Position = nextPosition;
-            }
-            else
-            {
-                switch (this.Field.map[nextPosition.Item1, nextPosition.Item2].Type)
-                {
-                    case TypeOfBlock.Player:
-                        ((PlayerModel)this.Field.map[nextPosition.Item1, nextPosition.Item2].Model).Health--;
-                        break;
-                    case TypeOfBlock.NPC:
-                        ((NPCModel)this.Field.map[nextPosition.Item1, nextPosition.Item2].Model).Health--;
-                        break;
-                    case TypeOfBlock.Bullet:
-                        ((Bullet)this.Field.map[nextPosition.Item1, nextPosition.Item2].Model).Die();
-                        break;
-                    case TypeOfBlock.BrickWall:
-                        this.Field.map[nextPosition.Item1, nextPosition.Item2].Health--;
-                        break;
-                    default:
-                        break;
-                }
-                this.Die();
-            }
-        }
-
-        public override void Die ()
-        {
-            this.Field.map[this.Position.Item1, this.Position.Item2].TurnToEmpty();
-            this.GGame.Bullets.Remove(this);
-        }
-
-        private (int, int) GetPosition((int, int) position, Directions? direction)
-        {
-            (int, int) res = (0 + position.Item1, 0 + position.Item2);
-
-            switch (direction)
-            {
-                case Directions.Up:
-                    res.Item1--;
+                    this.Position = nextPosition;
+                    return;
+                // EmptyCell is the only forwarding block that DOES NOT KILL the bullet.
+                // "return" above is VITAL !
+                    
+                case TypeOfBlock.Player:
+                    ((PlayerModel)this.Field.map[nextPosition.Y, nextPosition.X].Model).Health--;
                     break;
-                case Directions.RIght:
-                    res.Item2++;
+
+                case TypeOfBlock.NPC:
+                    ((NPCModel)this.Field.map[nextPosition.Y, nextPosition.X].Model).Health--;
                     break;
-                case Directions.Down:
-                    res.Item1++;
+
+                case TypeOfBlock.Bullet:
+                    ((Bullet)this.Field.map[nextPosition.Y, nextPosition.X].Model).Die();
                     break;
-                case Directions.Left:
-                    res.Item2--;
+
+                case TypeOfBlock.BrickWall:
+                    this.Field.map[nextPosition.Y, nextPosition.X].Health--;
                     break;
                 default:
                     break;
             }
+            
+            this.Die();
+        }
 
-            if (res.Item1 == -1)
-            {
-                res.Item1 = 14;
-            }
-            else if (res.Item1 == 15)
-            {
-                res.Item1 = 0;
-            }
-            else if (res.Item2 == -1)
-            {
-                res.Item2 = 59;
-            }
-            else if (res.Item2 == 60)
-            {
-                res.Item2 = 0;
-            }
-            return res;
+        public override void Die ()
+        {
+            this.Field.map[this.Position.Y, this.Position.X].TurnToEmpty();
+            this.GGame.Bullets.Remove(this);
         }
     }
 }

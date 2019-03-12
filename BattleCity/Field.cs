@@ -22,7 +22,6 @@ namespace BattleCity
 
         private string[,] _previousMap = new string[15, 60];
 
-
         public void Render()
         {
             for (int i = 0; i < 15; i++)

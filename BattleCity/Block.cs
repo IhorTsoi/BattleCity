@@ -57,9 +57,9 @@ namespace BattleCity
                     this.Model = model;
                     this.Symbol = (direction != null) ? 
                         Block.GetSymbol(direction, Type)
-                        :"▲";
+                        : "▲";
                     this._health = -1;
-                    this.BgColor = ConsoleColor.DarkGray;
+                    this.BgColor = ConsoleColor.DarkGray;//White;
                     this.FgColor = ConsoleColor.Black;
                     break;
                 case TypeOfBlock.NPC:
@@ -68,22 +68,22 @@ namespace BattleCity
                         Block.GetSymbol(direction, Type)
                         : "↓";
                     this._health = -1;
-                    this.BgColor = ConsoleColor.DarkGray;
+                    this.BgColor = ConsoleColor.DarkGray;//White;
                     this.FgColor = ConsoleColor.Black;
                     break;
                 case TypeOfBlock.Bullet:
                     this.Model = model;
                     this.Symbol = "ᴏ";
                     this._health = -1;
-                    this.BgColor = ConsoleColor.DarkGray;
+                    this.BgColor = ConsoleColor.DarkGray;//White;
                     this.FgColor = ConsoleColor.DarkRed;
                     break;
                 case TypeOfBlock.EmptyCell:
                     this.Model = model;
                     this.Symbol = " ";
                     this._health = -1;
-                    this.BgColor = ConsoleColor.DarkGray;
-                    this.FgColor = ConsoleColor.DarkGray;
+                    this.BgColor = ConsoleColor.DarkGray;//White;
+                    this.FgColor = ConsoleColor.DarkGray;//White;
                     break;
                 case TypeOfBlock.BrickWall:
                     this.Model = model;
@@ -114,8 +114,8 @@ namespace BattleCity
             this.Model = null;
             this.Symbol = " ";
             this._health = -1;
-            this.BgColor = ConsoleColor.DarkGray;
-            this.FgColor = ConsoleColor.DarkGray;
+            this.BgColor = ConsoleColor.DarkGray;//White;
+            this.FgColor = ConsoleColor.DarkGray;//White;
         }
 
         public void Rotate (Directions? direction, TypeOfBlock type)
