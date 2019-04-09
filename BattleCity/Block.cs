@@ -11,7 +11,8 @@ namespace BattleCity
         Bullet,
         EmptyCell,
         BrickWall,
-        Wall
+        Wall,
+        SecondPLayer
     }
 
     struct Block

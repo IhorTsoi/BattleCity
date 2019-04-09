@@ -10,7 +10,7 @@ namespace BattleCity
 
         public Bullet() { }
 
-        public Bullet ((int, int) position, Field field, Directions direction, Game game)
+        public Bullet ((int, int) position, Field field, Directions direction, IBasicGame game)
         {
             this.Position = position;
             this.Field = field;

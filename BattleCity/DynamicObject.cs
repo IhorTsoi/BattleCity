@@ -9,7 +9,7 @@ namespace BattleCity
         public (int Y, int X) Position { get; set; }
         public Field Field { get; set; }
         public Directions Direction { get; set; }
-        public Game GGame { get; set; }
+        public IBasicGame GGame { get; set; }
 
         public virtual void Die() { }
 

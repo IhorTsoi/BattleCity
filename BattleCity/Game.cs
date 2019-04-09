@@ -7,22 +7,23 @@ using System.Timers;
 
 namespace BattleCity
 {
-    class Game
+    class Game : IBasicGame
     {
         #region Fields & Properties
 
-        private Timer gameTimer;
+        protected Timer gameTimer;
 
         public Field Field { get; set; }
 
         public PlayerModel Player { get; set; }
-        public List<NPCModel> NPCs;
-        public List<Bullet> Bullets;
+        public List<NPCModel> NPCs { get; set; }
+        public List<Bullet> Bullets { get; set; }
 
-        public bool gameOver = false;
-        private bool _npcTime = false;
+        public bool _gameOver { get; set; } = false;
+        public bool _won { get; set; } = false;
+        protected bool _npcTime = false;
 
-        public string LvlName;
+        public string LvlName { get; set; }
 
         #endregion
 
@@ -34,11 +35,11 @@ namespace BattleCity
         {
             this.LvlName = levelInfo.Name;
 
-            this.Field = new Field ( mapInfo: levelInfo.FieldInfo );
+            this.Field = new Field(mapInfo: levelInfo.FieldInfo);
 
             this.Player = new PlayerModel(position: levelInfo.PlayerInfo, field: this.Field, game: this);
-            this.NPCs = new List<NPCModel> ();
-            foreach ((int, int) position in levelInfo.NPCsInfo )
+            this.NPCs = new List<NPCModel>();
+            foreach ((int, int) position in levelInfo.NPCsInfo)
             {
                 NPCs.Add(new NPCModel(position: position, field: this.Field, player: this.Player, game: this));
             }
@@ -54,9 +55,15 @@ namespace BattleCity
             this.Field._firstRender();
         }
 
+        public void Quit()
+        {
+            StopTimer();
+            _gameOver = true;
+        }
+
         #region Start, Stop, Render
 
-        public void StartTimer()
+        public virtual void StartTimer()
         {
             gameTimer = new Timer(interval: 180);
             gameTimer.Elapsed += Render;
@@ -71,9 +78,7 @@ namespace BattleCity
         }
 
         private void Render(object sender, ElapsedEventArgs e)
-        {
-            //Console.Clear();
-                
+        {                
             // moving
             this.Player.MoveHero();
             if (_npcTime)
@@ -87,7 +92,7 @@ namespace BattleCity
 
             foreach (Bullet bullet in this.Bullets.ToList())
             {
-                if (this.Field.map[bullet.Position.Item1, bullet.Position.Item2].Type != TypeOfBlock.EmptyCell)
+                if (this.Field.map[bullet.Position.Y, bullet.Position.X].Type != TypeOfBlock.EmptyCell)
                 {
                     bullet.MoveBullet();
                 }
@@ -112,11 +117,12 @@ namespace BattleCity
             if (this.NPCs.Count == 0)
             {
                 this.StopTimer();
-                this.gameOver = true;
+                this._gameOver = true;
+                this._won = true;
             }
 
 
-            if (!gameOver)
+            if (!_gameOver)
             {
                 this.Field.Render();
             }
@@ -126,7 +132,7 @@ namespace BattleCity
                 Console.BackgroundColor = ConsoleColor.DarkGray;
                 Console.Clear();
                 Console.WriteLine(new string('\n', 7) + (
-                                                            (this.NPCs.Count == 0) ?
+                                                            (_won) ?
                                                                 "\tYOU WON! PRESS ANY BUTTON!" :
                                                                 "\tGAME OVER. PRESS ANY BUTTON.")
                                                         );

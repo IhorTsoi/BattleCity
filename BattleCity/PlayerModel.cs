@@ -35,7 +35,7 @@ namespace BattleCity
 
         public PlayerModel() { }
 
-        public PlayerModel((int, int) position, Field field, Game game)
+        public PlayerModel((int, int) position, Field field, IBasicGame game)
         {
             this.Position = position;
             this.Field = field;
@@ -47,11 +47,11 @@ namespace BattleCity
 
         #endregion
 
-        public void MoveHero()
+        public Directions? MoveHero()
         {
             if (_nextStep == null)
             {
-                return;
+                return _nextStep;
             }
 
             if (this.Direction != _nextStep)
@@ -72,15 +72,15 @@ namespace BattleCity
                     this.Position = nextPosition;
                 }
             }
-
+            Directions? _nextStepCopy = _nextStep;
             _nextStep = null;
-            return;
+            return _nextStepCopy;
         }
 
-        public void Shoot() {
+        public bool Shoot() {
             if (!_nextShot)
             {
-                return;
+                return false;
             }
 
             (int, int) nextPosition = _GetPosition(this.Position, this.Direction);
@@ -109,14 +109,13 @@ namespace BattleCity
             }
 
             ///////////////
-            _nextShot = !_nextShot;
-            return;
+            _nextShot = false;
+            return true;
         }
 
         public override void Die()
         {
-            this.GGame.StopTimer();
-            this.GGame.gameOver = true;
+            this.GGame.Quit();
         }
     }
 }
