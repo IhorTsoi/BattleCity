@@ -1,24 +1,24 @@
 ﻿using System.Collections.Generic;
 
-namespace BattleCity
+namespace BattleCity.Model.Game
 {
     enum SocketCommunication
     {
         SendMove,
-        RecieveMove,
+        ReceiveMove,
         SendShoot,
-        RecieveShoot
+        ReceiveShoot
     }
 
-    interface IBasicGame
+    interface IGame
     {
         // properties:
         PlayerModel Player { get; set; }
         List<NPCModel> NPCs { get; set; }
         List<Bullet> Bullets { get; set; }
         string LvlName { get; set; }
-        bool _gameOver { get; set; }
-        bool _won { get; set; }
+        bool GameOver { get; set; }
+        bool Won { get; }
 
         // methods:
         void StartGame();

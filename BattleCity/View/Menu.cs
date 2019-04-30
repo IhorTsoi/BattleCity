@@ -4,35 +4,34 @@ using System.Text;
 
 namespace BattleCity
 {
-        enum Interfaces
-        {
-            MainMenu,
-            Levels,
-            MultiPlayer,
-            MultiplayerLevels,
-            Stats
-        }
+    enum MenuInterfaces
+    {
+        MainMenu,
+        Levels,
+        MultiPlayer,
+        MultiplayerLevels,
+        Stats
+    }
 
     class Menu
     {
-        private static string[] MainMenuOptions = new string[] 
+        private static readonly string[] MenuMainMenu = new string[] 
         {
             "1-PLAYER",
             "2-PLAYER",
             "STATS",
             "QUIT"
         };
-        private static string[] MultiPlayerOptions = new string[]
+        private static readonly string[] MenuMultiplayer = new string[]
         {
             "SERVER",
             "CLIENT"
         };
-        public (Interfaces Interface, int position) Pointer = (Interfaces.MainMenu, 0);
         public string[] MenuLevels;
         public string[] MenuMultiplayerLevels;
         public List<User> MenuStats;
 
-        public Menu() { }
+        public (MenuInterfaces Interface, int position) Pointer = (MenuInterfaces.MainMenu, 0);
 
         public Menu(string[] menuLevels, string[] menuMultiplayerLevels, List<User> stats)
         {
@@ -41,34 +40,70 @@ namespace BattleCity
             this.MenuMultiplayerLevels = menuMultiplayerLevels;
         }
 
-        public void Render ()
+
+        public void Render()
         {
             Console.Clear();
 
             switch (Pointer.Interface)
             {
-                case Interfaces.MainMenu:
+                case MenuInterfaces.MainMenu:
                     WriteTitle("BATTLE CITY");
-                    WriteMenu(arr: Menu.MainMenuOptions, position: Pointer.position);
+                    WriteMenu(arr: Menu.MenuMainMenu, position: Pointer.position);
                     break;
-                case Interfaces.Levels:
+                case MenuInterfaces.Levels:
                     WriteTitle("LEVELS");
                     WriteMenu(arr: this.MenuLevels, position: Pointer.position);
                     break;
-                case Interfaces.MultiPlayer:
+                case MenuInterfaces.MultiPlayer:
                     WriteTitle("CHOOSE MODE");
-                    WriteMenu(arr: Menu.MultiPlayerOptions, position: Pointer.position);
+                    WriteMenu(arr: Menu.MenuMultiplayer, position: Pointer.position);
                     break;
-                case Interfaces.MultiplayerLevels:
+                case MenuInterfaces.MultiplayerLevels:
                     WriteTitle("LEVELS FOR 2 PLAYERS");
                     WriteMenu(arr: this.MenuMultiplayerLevels, position: Pointer.position);
                     break;
-                case Interfaces.Stats:
+                case MenuInterfaces.Stats:
                     WriteTitle("STATS");
                     WriteMenu(list: this.MenuStats, position: Pointer.position);
                     break;
                 
-                default: throw new Exception("error in menu");
+                default: throw new Exception("Not implemented Pointer.Interface");
+            }
+        }
+        public void SetPointerPosition(ConsoleKey cki)
+        {
+            int _optionsCount;
+            switch (Pointer.Interface)
+            {
+                case MenuInterfaces.MainMenu:
+                    _optionsCount = MenuMainMenu.Length;
+                    break;
+                case MenuInterfaces.Levels:
+                    _optionsCount = MenuLevels.Length;
+                    break;
+                case MenuInterfaces.MultiPlayer:
+                    _optionsCount = MenuMultiplayer.Length;
+                    break;
+                case MenuInterfaces.MultiplayerLevels:
+                    _optionsCount = MenuMultiplayerLevels.Length;
+                    break;
+                case MenuInterfaces.Stats:
+                    _optionsCount = MenuStats.Count;
+                    break;
+                default:
+                    throw new Exception("Not implemented MenuInterface");
+            }
+
+            switch (cki)
+            {
+                case ConsoleKey.DownArrow:
+                    Pointer.position = (Pointer.position + 1) % _optionsCount;
+                    break;
+
+                case ConsoleKey.UpArrow:
+                    Pointer.position = (Pointer.position + _optionsCount - 1) % _optionsCount;
+                    break;
             }
         }
 
@@ -78,7 +113,6 @@ namespace BattleCity
             Console.WriteLine(new string(' ', 15) + title);
             Console.WriteLine(new string('\n', 3));
         }
-
         private static void WriteMenu(string[] arr, int position)
         {
             for (int i = 0, length = arr.Length; i < length; i++)
@@ -97,7 +131,6 @@ namespace BattleCity
                 }
             }
         }
-
         private static void WriteMenu(List<User> list, int position)
         {
             for (int i = 0, length = list.Count; i < length; i++)

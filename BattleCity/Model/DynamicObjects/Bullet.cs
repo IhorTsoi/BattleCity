@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using BattleCity.Model.Game;
 
 namespace BattleCity
 {
@@ -10,13 +11,13 @@ namespace BattleCity
 
         public Bullet() { }
 
-        public Bullet ((int, int) position, Field field, Directions direction, IBasicGame game)
+        public Bullet ((int, int) position, Field field, Directions direction, IGame game)
         {
             this.Position = position;
             this.Field = field;
             this.Direction = direction;
             this.GGame = game;
-            this.Field.map[position.Item1, position.Item2].Model = this;
+            this.Field.Map[position.Item1, position.Item2].Model = this;
 
         }
 
@@ -24,14 +25,14 @@ namespace BattleCity
 
         public void MoveBullet ()
         {
-            (int Y, int X) nextPosition = _GetPosition(position: this.Position, direction: this.Direction);
+            (int Y, int X) nextPosition = GetPosition(position: this.Position, direction: this.Direction);
 
 
-            switch (this.Field.map[ nextPosition.Y, nextPosition.X ].Type)
+            switch (this.Field[ nextPosition.Y, nextPosition.X ].Type)
             {
                 case TypeOfBlock.EmptyCell:
-                    this.Field.map[nextPosition.Y, nextPosition.X] = this.Field.map[this.Position.Y, this.Position.X];
-                    this.Field.map[this.Position.Y, this.Position.X].TurnToEmpty();
+                    this.Field[nextPosition.Y, nextPosition.X] = this.Field[this.Position.Y, this.Position.X];
+                    this.Field.Map[this.Position.Y, this.Position.X].TurnToEmpty();
 
                     this.Position = nextPosition;
                     return;
@@ -39,19 +40,19 @@ namespace BattleCity
                 // "return" above is VITAL !
                     
                 case TypeOfBlock.Player:
-                    ((PlayerModel)this.Field.map[nextPosition.Y, nextPosition.X].Model).Health--;
+                    ((PlayerModel)this.Field.Map[nextPosition.Y, nextPosition.X].Model).Health--;
                     break;
 
                 case TypeOfBlock.NPC:
-                    ((NPCModel)this.Field.map[nextPosition.Y, nextPosition.X].Model).Health--;
+                    ((NPCModel)this.Field.Map[nextPosition.Y, nextPosition.X].Model).Health--;
                     break;
 
                 case TypeOfBlock.Bullet:
-                    ((Bullet)this.Field.map[nextPosition.Y, nextPosition.X].Model).Die();
+                    ((Bullet)this.Field.Map[nextPosition.Y, nextPosition.X].Model).Die();
                     break;
 
                 case TypeOfBlock.BrickWall:
-                    this.Field.map[nextPosition.Y, nextPosition.X].Health--;
+                    this.Field.Map[nextPosition.Y, nextPosition.X].Health--;
                     break;
                 default:
                     break;
@@ -62,7 +63,7 @@ namespace BattleCity
 
         public override void Die ()
         {
-            this.Field.map[this.Position.Y, this.Position.X].TurnToEmpty();
+            this.Field.Map[this.Position.Y, this.Position.X].TurnToEmpty();
             this.GGame.Bullets.Remove(this);
         }
     }

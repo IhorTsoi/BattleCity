@@ -41,8 +41,8 @@ namespace BattleCity
         public ConsoleColor BgColor { get; set; }
         public ConsoleColor FgColor { get; set; }
 
-        private static readonly string[] SymbolsPlayer = new string[] { "▲","►","▼","◄" };
-        private static readonly string[] SymbolsNPC = new string[] { "↑","→","↓", "←" };
+        private static readonly string[] SymbolsPlayer = new string[] { "◄","▲","►","▼" };
+        private static readonly string[] SymbolsNPC = new string[] { "←","↑","→","↓" };
 
         #endregion
 
@@ -60,7 +60,7 @@ namespace BattleCity
                         Block.GetSymbol(direction, Type)
                         : "▲";
                     this._health = -1;
-                    this.BgColor = ConsoleColor.DarkGray;//White;
+                    this.BgColor = ConsoleColor.DarkGray;
                     this.FgColor = ConsoleColor.Black;
                     break;
                 case TypeOfBlock.NPC:
@@ -69,22 +69,22 @@ namespace BattleCity
                         Block.GetSymbol(direction, Type)
                         : "↓";
                     this._health = -1;
-                    this.BgColor = ConsoleColor.DarkGray;//White;
+                    this.BgColor = ConsoleColor.DarkGray;
                     this.FgColor = ConsoleColor.Black;
                     break;
                 case TypeOfBlock.Bullet:
                     this.Model = model;
                     this.Symbol = "ᴏ";
                     this._health = -1;
-                    this.BgColor = ConsoleColor.DarkGray;//White;
+                    this.BgColor = ConsoleColor.DarkGray;
                     this.FgColor = ConsoleColor.DarkRed;
                     break;
                 case TypeOfBlock.EmptyCell:
                     this.Model = model;
                     this.Symbol = " ";
                     this._health = -1;
-                    this.BgColor = ConsoleColor.DarkGray;//White;
-                    this.FgColor = ConsoleColor.DarkGray;//White;
+                    this.BgColor = ConsoleColor.DarkGray;
+                    this.FgColor = ConsoleColor.DarkGray;
                     break;
                 case TypeOfBlock.BrickWall:
                     this.Model = model;
@@ -101,7 +101,7 @@ namespace BattleCity
                     this.FgColor = ConsoleColor.Black;
                     break;
                 default:
-                    throw new Exception("\nno such Type.\n");
+                    throw new Exception("\nNot implemented type of Block\n");
             }
         }
 
@@ -115,8 +115,8 @@ namespace BattleCity
             this.Model = null;
             this.Symbol = " ";
             this._health = -1;
-            this.BgColor = ConsoleColor.DarkGray;//White;
-            this.FgColor = ConsoleColor.DarkGray;//White;
+            this.BgColor = ConsoleColor.DarkGray;
+            this.FgColor = ConsoleColor.DarkGray;
         }
 
         public void Rotate (Directions? direction, TypeOfBlock type)

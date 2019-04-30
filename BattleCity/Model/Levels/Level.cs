@@ -13,9 +13,4 @@ namespace BattleCity
         public (int,int)[] NPCsInfo;
         public (int, int) PlayerInfo;
     }
-
-    class MultiplayerLevel : Level
-    {
-        public (int, int) SecondPlayerInfo;
-    }
 }
