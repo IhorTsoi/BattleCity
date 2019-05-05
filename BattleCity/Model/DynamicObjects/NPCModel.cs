@@ -127,8 +127,8 @@ namespace BattleCity
             //
             if (_YDistance < _XDistance)
             {
-                _nextSteps.Enqueue((this.Position.Y > this.Player.Position.Y) ? Directions.Up : Directions.Down);
-                if (this.Position.X > this.Player.Position.X)
+                _nextSteps.Enqueue((Position.Y > Player.Position.Y) ? Directions.Up : Directions.Down);
+                if (Position.X > Player.Position.X)
                 {
                     _nextSteps.Enqueue(Directions.Left);
                     _nextSteps.Enqueue(Directions.Right);
@@ -141,8 +141,8 @@ namespace BattleCity
             }
             else
             {
-                _nextSteps.Enqueue((this.Position.X > this.Player.Position.X) ? Directions.Left : Directions.Right);
-                if (this.Position.Y > this.Player.Position.Y)
+                _nextSteps.Enqueue((Position.X > Player.Position.X) ? Directions.Left : Directions.Right);
+                if (Position.Y > Player.Position.Y)
                 {
                     _nextSteps.Enqueue(Directions.Up);
                     _nextSteps.Enqueue(Directions.Down);
@@ -168,19 +168,19 @@ namespace BattleCity
             //
             (int Y, int X) = GetPosition(Position, direction.Peek());
             //
-            switch (this.Field[Y, X].Type)
+            switch (Field[Y, X].Type)
             {
                 case TypeOfBlock.EmptyCell:
-                    if (this.Direction != direction.Peek())
+                    if (Direction != direction.Peek())
                     {
-                        this.RotateSelf(direction.Dequeue());
-                        this._goingRoundTheObstacle = true;
+                        RotateSelf(direction.Dequeue());
+                        _goingRoundTheObstacle = true;
                     }
                     else
                     {
-                        this.Field[Y, X] = this.Field[this.Position.Y, this.Position.X];
-                        this.Field.Map[this.Position.Y, this.Position.X].TurnToEmpty();
-                        this.Position = (Y, X);
+                        Field[Y, X] = Field[Position.Y, Position.X];
+                        Field.Map[Position.Y, Position.X].TurnToEmpty();
+                        Position = (Y, X);
                     }
                     return;
 
@@ -196,12 +196,12 @@ namespace BattleCity
         {
             (int Y, int X) = GetPosition(Position, direction);
 
-            switch (this.Field[Y, X].Type)
+            switch (Field[Y, X].Type)
             {
                 case TypeOfBlock.EmptyCell:
-                        this.Field[Y, X] = this.Field[this.Position.Y, this.Position.X];
-                        this.Field.Map[this.Position.Y, this.Position.X].TurnToEmpty();
-                        this.Position = (Y, X);
+                        Field[Y, X] = Field[Position.Y, Position.X];
+                        Field.Map[Position.Y, Position.X].TurnToEmpty();
+                        Position = (Y, X);
                     return;
 
                 default:

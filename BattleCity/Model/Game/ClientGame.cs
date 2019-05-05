@@ -63,6 +63,8 @@ namespace BattleCity.Model.Game
             View.PrintGameOver(Won);
         }
 
+
+        // Private methods:
         private bool CheckOpponentOnline()
         {
             // 0 if disconnected, 1 if connected
@@ -87,10 +89,10 @@ namespace BattleCity.Model.Game
 
                 // MOVING
                 Communicate(SocketCommunication.ReceiveMove);
-                this.Opponent.MoveHero();
+                Opponent.MoveHero();
                 
                 Communicate(SocketCommunication.SendMove, 
-                    this.Player.MoveHero());
+                    Player.MoveHero());
 
                 if (_npcTime)
                 {
@@ -107,15 +109,15 @@ namespace BattleCity.Model.Game
                 }
 
                 Communicate(SocketCommunication.ReceiveShoot);
-                this.Opponent.Shoot();
+                Opponent.Shoot();
 
                 Communicate(SocketCommunication.SendShoot, 
-                    this.Player.Shoot());
+                    Player.Shoot());
 
                 
                 // RENDERING THE MAP
                 _npcTime = !_npcTime;
-                this.Field.RenderCommon();
+                Field.RenderCommon();
             }
         }
     }

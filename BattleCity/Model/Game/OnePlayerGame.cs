@@ -1,9 +1,4 @@
-﻿using BattleCity.Model.Game;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 using System.Timers;
 using BattleCity.Model.Game.Components;
 
@@ -16,20 +11,20 @@ namespace BattleCity.Model.Game
         // Constructors:
         public OnePlayerGame(Level levelInfo)
         {
-            this.LvlName = levelInfo.Name;
+            LvlName = levelInfo.Name;
             //
-            this.Field = new Field(mapInfo: levelInfo.FieldInfo);
+            Field = new Field(mapInfo: levelInfo.FieldInfo);
             //
-            this.Player = new PlayerModel(position: levelInfo.PlayerInfo, field: this.Field, game: this);
-            this.Player.DieEvent += () => GameState.Lose();
+            Player = new PlayerModel(position: levelInfo.PlayerInfo, field: Field, game: this);
+            Player.DieEvent += () => GameState.Lose();
             //
-            this.NPCs = new List<NPCModel>();
+            NPCs = new List<NPCModel>();
             foreach ((int, int) position in levelInfo.NPCsInfo)
             {
-                NPCs.Add(new NPCModel(position: position, field: this.Field, player: this.Player, game: this));
+                NPCs.Add(new NPCModel(position: position, field: Field, player: Player, game: this));
             }
             //
-            this.Bullets = new List<Bullet>();
+            Bullets = new List<Bullet>();
             //
             GameTimer = new GameTimer(loop_function: MainLoop);
         }
@@ -39,7 +34,10 @@ namespace BattleCity.Model.Game
         {
             GameTimer.StartTimer();
         }
-        public override void Quit()
+        public override void Quit() => GameState.Lose();
+
+        // Private methods:
+        private void StopTheGame()
         {
             GameTimer.StopTimer();
             GameOver = true;
@@ -49,7 +47,7 @@ namespace BattleCity.Model.Game
         private void MainLoop(object sender, ElapsedEventArgs e)
         {                
             // MOVING
-            this.Player.MoveHero();
+            Player.MoveHero();
             if (_npcTime)
             {
                 InvokeNPCs();
@@ -65,19 +63,19 @@ namespace BattleCity.Model.Game
             {
                 InvokeNPCs(shoot: true);
             }
-            this.Player.Shoot();
+            Player.Shoot();
 
             
             // RENDERING THE MAP
             _npcTime = !_npcTime;
-            this.Field.RenderCommon();
+            Field.RenderCommon();
 
 
             // CHECK IF THE GAME IS OVER
             if ( NPCs.Count == 0 || GameState.Died() )
             {
                 GameState.Win();
-                Quit();
+                StopTheGame();
             }
         }
     }

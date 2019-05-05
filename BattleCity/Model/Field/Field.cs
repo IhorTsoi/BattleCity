@@ -11,18 +11,18 @@ namespace BattleCity
 
         public Block this[int Y, int X]
         {
-            get => this.Map[Y, X];
-            set => this.Map[Y, X] = value;
+            get => Map[Y, X];
+            set => Map[Y, X] = value;
         }
 
         public Field (TypeOfBlock[,] mapInfo)
         {
-            this.Map = new Block[15,60];
+            Map = new Block[15,60];
             for(int i = 0; i < 15;i++)
             {
                 for (int j = 0; j < 60; j++)
                 {
-                    this.Map[i, j] = new Block(mapInfo[i,j]);
+                    Map[i, j] = new Block(mapInfo[i,j]);
                 }
             }
         }
@@ -30,15 +30,15 @@ namespace BattleCity
 
         private void RenderIteration(int i, int j)
         {
-            if (this.Map[i, j].Symbol != this._PreviousMap[i, j])
+            if (Map[i, j].Symbol != _PreviousMap[i, j])
             {
-                Console.BackgroundColor = this.Map[i, j].BgColor;
-                Console.ForegroundColor = this.Map[i, j].FgColor;
+                Console.BackgroundColor = Map[i, j].BgColor;
+                Console.ForegroundColor = Map[i, j].FgColor;
 
                 Console.SetCursorPosition(left: j, top: i);
-                Console.Write(this.Map[i, j].Symbol);
+                Console.Write(Map[i, j].Symbol);
 
-                _PreviousMap[i, j] = this.Map[i, j].Symbol;
+                _PreviousMap[i, j] = Map[i, j].Symbol;
             }
         }
 
@@ -60,11 +60,11 @@ namespace BattleCity
 
         public void FirstRenderIteration(int i, int j)
         {
-            Console.BackgroundColor = this.Map[i, j].BgColor;
-            Console.ForegroundColor = this.Map[i, j].FgColor;
+            Console.BackgroundColor = Map[i, j].BgColor;
+            Console.ForegroundColor = Map[i, j].FgColor;
 
-            Console.Write(this.Map[i, j].Symbol);
-            _PreviousMap[i, j] = this.Map[i, j].Symbol;
+            Console.Write(Map[i, j].Symbol);
+            _PreviousMap[i, j] = Map[i, j].Symbol;
         }
     }
 }

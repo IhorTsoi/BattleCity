@@ -6,23 +6,18 @@ namespace BattleCity
 {
     class User
     {
-        #region Fields & Properties
+        // Properties :
 
         public string Name { get; set; } = "User";
         public List<string> Levels { get; set; } = new List<string>();
        
-        #endregion
 
-        #region Constructors
-
-        public User() { }
+        // Constructors :
 
         public User(string name, List<string> levels)
         {
-            this.Name = name;
-            this.Levels = levels;
+            Name = name;
+            Levels = levels;
         }
-
-        #endregion
     }
 }

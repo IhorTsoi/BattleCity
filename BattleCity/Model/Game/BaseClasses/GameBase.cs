@@ -31,12 +31,12 @@ namespace BattleCity.Model.Game
         public void StartGame()
         {
             Console.Clear();
-            this.Field.RenderCommon(first: true);
+            Field.RenderCommon(first: true);
             StartLoop();
         }
         protected void InvokeNPCs(bool shoot = false)
         {
-            foreach (NPCModel npc in this.NPCs.ToList())
+            foreach (NPCModel npc in NPCs.ToList())
             {
                 if (shoot)
                 {
@@ -50,9 +50,9 @@ namespace BattleCity.Model.Game
         }
         protected void InvokeBullets()
         {
-            foreach (Bullet bullet in this.Bullets.ToList())
+            foreach (Bullet bullet in Bullets.ToList())
             {
-                if (this.Field[bullet.Position.Y, bullet.Position.X].Type != TypeOfBlock.EmptyCell)
+                if (Field[bullet.Position.Y, bullet.Position.X].Type != TypeOfBlock.EmptyCell)
                 {
                     bullet.MoveBullet();
                 }

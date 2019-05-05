@@ -35,9 +35,9 @@ namespace BattleCity
 
         public Menu(string[] menuLevels, string[] menuMultiplayerLevels, List<User> stats)
         {
-            this.MenuLevels = menuLevels;
-            this.MenuStats = stats;
-            this.MenuMultiplayerLevels = menuMultiplayerLevels;
+            MenuLevels = menuLevels;
+            MenuStats = stats;
+            MenuMultiplayerLevels = menuMultiplayerLevels;
         }
 
 
@@ -53,7 +53,7 @@ namespace BattleCity
                     break;
                 case MenuInterfaces.Levels:
                     WriteTitle("LEVELS");
-                    WriteMenu(arr: this.MenuLevels, position: Pointer.position);
+                    WriteMenu(arr: MenuLevels, position: Pointer.position);
                     break;
                 case MenuInterfaces.MultiPlayer:
                     WriteTitle("CHOOSE MODE");
@@ -61,11 +61,11 @@ namespace BattleCity
                     break;
                 case MenuInterfaces.MultiplayerLevels:
                     WriteTitle("LEVELS FOR 2 PLAYERS");
-                    WriteMenu(arr: this.MenuMultiplayerLevels, position: Pointer.position);
+                    WriteMenu(arr: MenuMultiplayerLevels, position: Pointer.position);
                     break;
                 case MenuInterfaces.Stats:
                     WriteTitle("STATS");
-                    WriteMenu(list: this.MenuStats, position: Pointer.position);
+                    WriteMenu(list: MenuStats, position: Pointer.position);
                     break;
                 
                 default: throw new Exception("Not implemented Pointer.Interface");

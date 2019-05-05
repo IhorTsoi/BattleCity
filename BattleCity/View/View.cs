@@ -24,9 +24,9 @@ namespace BattleCity
 
         public static void PrintGameOver(bool won)
         {
+            Console.Clear();
             Console.ForegroundColor = ConsoleColor.White;
             Console.BackgroundColor = ConsoleColor.DarkGray;
-            Console.Clear();
             Console.WriteLine(new string('\n', 7) + (won ?
                                                         WonMessage :
                                                         LostMessage));

@@ -17,7 +17,7 @@ namespace BattleCity
             {
                 if (value <= 0)
                 {
-                    this.Die();
+                    Die();
                 }
                 else
                 {
@@ -33,11 +33,11 @@ namespace BattleCity
         // Constructor
         public PlayerModel((int, int) position, Field field, IGame game)
         {
-            this.Position = position;
-            this.Field = field;
-            this.Direction = Directions.Up;
-            this.GGame = game;
-            this.Field.Map[position.Item1, position.Item2].Model = this;
+            Position = position;
+            Field = field;
+            Direction = Directions.Up;
+            GGame = game;
+            Field.Map[position.Item1, position.Item2].Model = this;
         }
 
         // Methods
@@ -45,7 +45,7 @@ namespace BattleCity
         {
             if (NextStep == null) return NextStep;
             //
-            if (this.Direction != NextStep)
+            if (Direction != NextStep)
             {
                 Rotate();
             }
@@ -81,9 +81,9 @@ namespace BattleCity
             //
             if (!NextShoot) return false;
             //
-            (int Y, int X) = GetPosition(this.Position, this.Direction);
+            (int Y, int X) = GetPosition(Position, Direction);
             //
-            switch (this.Field[Y, X].Type)
+            switch (Field[Y, X].Type)
             {
                 case TypeOfBlock.EmptyCell:
                     Field[Y, X] = new Block( TypeOfBlock.Bullet, model: null, direction: Direction );
@@ -106,7 +106,7 @@ namespace BattleCity
                     ((Bullet)Field.Map[Y, X].Model).Die();
                     break;
                 case TypeOfBlock.BrickWall:
-                    this.Field.Map[Y, X].Health--;
+                    Field.Map[Y, X].Health--;
                     break;
                 default:
                     // never change this line !!!!!!!!!!!!!
@@ -119,7 +119,7 @@ namespace BattleCity
         //
         public override void Die()
         {
-            Field.Map[this.Position.Y, this.Position.X].TurnToEmpty();
+            Field.Map[Position.Y, Position.X].TurnToEmpty();
             DieEvent();
         }
     }

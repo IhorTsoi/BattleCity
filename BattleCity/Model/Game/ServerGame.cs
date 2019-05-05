@@ -57,6 +57,9 @@ namespace BattleCity.Model.Game
             SERVER.Listen(backlog: 1);
             CLIENT = SERVER.Accept();
         }
+
+
+        // Private methods:
         private void StopTheGame()
         {
             GameTimer.StopTimer();
@@ -91,10 +94,10 @@ namespace BattleCity.Model.Game
 
             // MOVING
             Communicate(SocketCommunication.SendMove, 
-                this.Player.MoveHero());
+                Player.MoveHero());
             
             Communicate(SocketCommunication.ReceiveMove);
-            this.Opponent.MoveHero();
+            Opponent.MoveHero();
             
             if (_npcTime)
             {
@@ -111,15 +114,15 @@ namespace BattleCity.Model.Game
             }
 
             Communicate(SocketCommunication.SendShoot, 
-                this.Player.Shoot());
+                Player.Shoot());
       
             Communicate(SocketCommunication.ReceiveShoot);
-            this.Opponent.Shoot();
+            Opponent.Shoot();
 
 
             // RENDERING THE MAP
             _npcTime = !_npcTime;
-            this.Field.RenderCommon();
+            Field.RenderCommon();
         }
     }
 }

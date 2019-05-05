@@ -14,24 +14,24 @@ namespace BattleCity.Model.Game
         protected byte[] Buffer_presence = new byte[1];
         protected bool CloseMessage = false;
 
-        // constructor:
+        // Constructor:
         public MultiPlayerGameBase(MultiplayerLevel multiplayerLevel)
         {
-            this.LvlName = multiplayerLevel.Name;
+            LvlName = multiplayerLevel.Name;
 
-            this.Field = new Field(mapInfo: multiplayerLevel.FieldInfo);
-            this.Bullets = new List<Bullet>();
+            Field = new Field(mapInfo: multiplayerLevel.FieldInfo);
+            Bullets = new List<Bullet>();
 
             ConnectToOpponent();
         }
 
-        // overriden methods:
+        // Overriden methods:
         public override void Quit() => CloseMessage = true;
 
-        // abstract methods:
+        // Abstract methods:
         protected abstract void ConnectToOpponent();
 
-        // methods:
+        // Protected methods:
         protected void Communicate(SocketCommunication mode, object sender = null)
         {
             byte message;
@@ -77,7 +77,7 @@ namespace BattleCity.Model.Game
             }
             else
             {
-                this.Opponent.NextShoot = (v == 0) ?
+                Opponent.NextShoot = (v == 0) ?
                                                 false :
                                                     true;
             }

@@ -13,11 +13,11 @@ namespace BattleCity
 
         public Bullet ((int, int) position, Field field, Directions direction, IGame game)
         {
-            this.Position = position;
-            this.Field = field;
-            this.Direction = direction;
-            this.GGame = game;
-            this.Field.Map[position.Item1, position.Item2].Model = this;
+            Position = position;
+            Field = field;
+            Direction = direction;
+            GGame = game;
+            Field.Map[position.Item1, position.Item2].Model = this;
 
         }
 
@@ -25,46 +25,46 @@ namespace BattleCity
 
         public void MoveBullet ()
         {
-            (int Y, int X) nextPosition = GetPosition(position: this.Position, direction: this.Direction);
+            (int Y, int X) nextPosition = GetPosition(position: Position, direction: Direction);
 
 
-            switch (this.Field[ nextPosition.Y, nextPosition.X ].Type)
+            switch (Field[ nextPosition.Y, nextPosition.X ].Type)
             {
                 case TypeOfBlock.EmptyCell:
-                    this.Field[nextPosition.Y, nextPosition.X] = this.Field[this.Position.Y, this.Position.X];
-                    this.Field.Map[this.Position.Y, this.Position.X].TurnToEmpty();
+                    Field[nextPosition.Y, nextPosition.X] = Field[Position.Y, Position.X];
+                    Field.Map[Position.Y, Position.X].TurnToEmpty();
 
-                    this.Position = nextPosition;
+                    Position = nextPosition;
                     return;
                 // EmptyCell is the only forwarding block that DOES NOT KILL the bullet.
                 // "return" above is VITAL !
                     
                 case TypeOfBlock.Player:
-                    ((PlayerModel)this.Field.Map[nextPosition.Y, nextPosition.X].Model).Health--;
+                    ((PlayerModel)Field.Map[nextPosition.Y, nextPosition.X].Model).Health--;
                     break;
 
                 case TypeOfBlock.NPC:
-                    ((NPCModel)this.Field.Map[nextPosition.Y, nextPosition.X].Model).Health--;
+                    ((NPCModel)Field.Map[nextPosition.Y, nextPosition.X].Model).Health--;
                     break;
 
                 case TypeOfBlock.Bullet:
-                    ((Bullet)this.Field.Map[nextPosition.Y, nextPosition.X].Model).Die();
+                    ((Bullet)Field.Map[nextPosition.Y, nextPosition.X].Model).Die();
                     break;
 
                 case TypeOfBlock.BrickWall:
-                    this.Field.Map[nextPosition.Y, nextPosition.X].Health--;
+                    Field.Map[nextPosition.Y, nextPosition.X].Health--;
                     break;
                 default:
                     break;
             }
             
-            this.Die();
+            Die();
         }
 
         public override void Die ()
         {
-            this.Field.Map[this.Position.Y, this.Position.X].TurnToEmpty();
-            this.GGame.Bullets.Remove(this);
+            Field.Map[Position.Y, Position.X].TurnToEmpty();
+            GGame.Bullets.Remove(this);
         }
     }
 }

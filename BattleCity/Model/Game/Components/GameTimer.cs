@@ -6,20 +6,23 @@ namespace BattleCity.Model.Game.Components
 {
     class GameTimer
     {
-        // timer instance
+        // Timer instance :
         private Timer Timer { get; set; }
-        // timer properties
+
+        // Timer properties :
         private int Interval { get; set; }
-        // timer callback
         private ElapsedEventHandler Elapsed { get; set; }
 
-        // constructor
+
+        // Constructor :
         public GameTimer(ElapsedEventHandler loop_function, int interval = 180)
         {
             Elapsed = loop_function;
             Interval = interval;
         }
 
+
+        // Methods :
         public void StartTimer()
         {
             Timer = new Timer(interval: Interval);
