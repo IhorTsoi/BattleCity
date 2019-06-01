@@ -7,7 +7,7 @@ namespace BattleCity
     class Field
     {
         public Block[,] Map;
-        private string[,] _PreviousMap = new string[15, 60];
+        private string[,] _PreviousMap = new string[Controller.FieldHeight, Controller.FieldWidth];
 
         public Block this[int Y, int X]
         {
@@ -17,10 +17,10 @@ namespace BattleCity
 
         public Field (TypeOfBlock[,] mapInfo)
         {
-            Map = new Block[15,60];
-            for(int i = 0; i < 15;i++)
+            Map = new Block[Controller.FieldHeight, Controller.FieldWidth];
+            for(int i = 0; i < Controller.FieldHeight; i++)
             {
-                for (int j = 0; j < 60; j++)
+                for (int j = 0; j < Controller.FieldWidth; j++)
                 {
                     Map[i, j] = new Block(mapInfo[i,j]);
                 }
@@ -42,18 +42,18 @@ namespace BattleCity
             }
         }
 
-        public void RenderCommon(bool first = false)
+        public void RenderCommon(bool firstRender = false)
         {
-            for (int i = 0; i < 15; i++)
+            for (int i = 0; i < Controller.FieldHeight; i++)
             {
-                for (int j = 0; j < 60; j++)
+                for (int j = 0; j < Controller.FieldWidth; j++)
                 {
-                    if (first)
+                    if (firstRender)
                         FirstRenderIteration(i, j);
                     else
                         RenderIteration(i, j);
                 }
-                if (first)
+                if (firstRender)
                     Console.Write('\n');
             }
         }

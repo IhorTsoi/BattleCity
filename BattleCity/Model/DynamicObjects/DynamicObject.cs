@@ -22,11 +22,11 @@ namespace BattleCity
                 // 0 <= res.Y <= 14
                 case Directions.Left:   //0
                 case Directions.Right:  //2
-                    res.X = (res.X + (int)direction + 59) % 60;
+                    res.X = (res.X + (int)direction + (Controller.FieldWidth - 1)) % Controller.FieldWidth;
                     break;
                 case Directions.Up:     //1
                 case Directions.Down:   //3
-                    res.Y = (res.Y + (int)direction + 13) % 15;
+                    res.Y = (res.Y + (int)direction + (Controller.FieldHeight - 2)) % Controller.FieldHeight;
                     break;
                 default: throw new NotImplementedException("Direction type not implemented");
             }

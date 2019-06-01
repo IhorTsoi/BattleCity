@@ -31,7 +31,7 @@ namespace BattleCity.Model.Game
         public void StartGame()
         {
             Console.Clear();
-            Field.RenderCommon(first: true);
+            Field.RenderCommon(firstRender: true);
             StartLoop();
         }
         protected void InvokeNPCs(bool shoot = false)

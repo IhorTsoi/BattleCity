@@ -18,6 +18,9 @@ namespace BattleCity
         private const string StatisticsDirectoryName = "statistics";
         private const string MultiplayerLevelsDirectoryName = "multilevels";
 
+        public const int FieldWidth = 60;
+        public const int FieldHeight = 15;
+
         #endregion
 
         public static void InitializeData()
