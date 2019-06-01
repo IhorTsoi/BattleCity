@@ -9,25 +9,19 @@ namespace BattleCity.Model.Game.Components
         // Timer instance :
         private Timer Timer { get; set; }
 
-        // Timer properties :
-        private int Interval { get; set; }
-        private ElapsedEventHandler Elapsed { get; set; }
-
 
         // Constructor :
-        public GameTimer(ElapsedEventHandler loop_function, int interval = 180)
+        public GameTimer(ElapsedEventHandler loop_function, int interval = 180, bool autoReset = true)
         {
-            Elapsed = loop_function;
-            Interval = interval;
+            Timer = new Timer(interval: interval);
+            Timer.Elapsed += loop_function;
+            Timer.AutoReset = autoReset;
         }
 
 
         // Methods :
         public void StartTimer()
         {
-            Timer = new Timer(interval: Interval);
-            Timer.Elapsed += Elapsed;
-            Timer.AutoReset = true;
             Timer.Enabled = true;
         }
 

@@ -1,1 +1,18 @@
-[{"Name":"Igor Tsoi","Levels":["EmptyLevel","TargetLevel","HardLevel","ToraLevel","NoWallsLevel","BoxLevel","ParallelLevel"]},{"Name":"NoName","Levels":["ToraLevel","NoWallsLevel","ParallelLevel","HardLevel","TargetLevel"]},{"Name":"MinoDentori","Levels":["NoWallsLevel","ParallelLevel"]},{"Name":"Kate","Levels":["BoxLevel"]},{"Name":"IgorTsoi","Levels":[]},{"Name":"Tsoi Igor","Levels":[]},{"Name":"q","Levels":["BoxLevel","NoWallsLevel","ToraLevel","HardLevel","ParallelLevel","TargetLevel"]},{"Name":"","Levels":[]},{"Name":"q'","Levels":[]}]
+[
+  {
+    "Name": "Igor Tsoi",
+    "Levels": [ "EmptyLevel", "TargetLevel", "HardLevel", "ToraLevel" ]
+  },
+  {
+    "Name": "NoName",
+    "Levels": [ "ToraLevel", "NoWallsLevel", "ParallelLevel", "HardLevel", "TargetLevel" ]
+  },
+  {
+    "Name": "MinoDentori",
+    "Levels": [ "NoWallsLevel", "ParallelLevel" ]
+  },
+  {
+    "Name": "Kate",
+    "Levels": [ "BoxLevel" ]
+  }
+]

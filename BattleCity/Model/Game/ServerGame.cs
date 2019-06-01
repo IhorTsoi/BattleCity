@@ -16,19 +16,19 @@ namespace BattleCity.Model.Game
         // Constructors:
         public ServerGame(MultiplayerLevel multiplayerLevel) : base(multiplayerLevel)
         {
-            Player = new PlayerModel(position: multiplayerLevel.PlayerInfo, field: Field, game: this);
+            Player = new PlayerModel(multiplayerLevel.PlayerInfo, Field, game: this);
             Player.DieEvent += () =>
-                                    {
-                                        GameState.Lose();
-                                        CloseMessage = true;
-                                    };
+                {
+                    GameState.Lose();
+                    CloseMessage = true;
+                };
             //
-            Opponent = new PlayerModel(position: multiplayerLevel.SecondPlayerInfo, field: Field, game: this);
+            Opponent = new PlayerModel(multiplayerLevel.SecondPlayerInfo, Field, game: this);
             Opponent.DieEvent += () =>
-                                    {
-                                        GameState.Win();
-                                        CloseMessage = true;
-                                    };
+                {
+                    GameState.Win();
+                    CloseMessage = true;
+                };
             //
             NPCs = new List<NPCModel>();
             foreach ((int, int) position in multiplayerLevel.NPCsInfo)
@@ -36,13 +36,13 @@ namespace BattleCity.Model.Game
                 NPCs.Add(
                     new NPCModelMP( position,
                         Field,
-                        player: Player,
+                        Player,
                         game: this,
                         serverPlayer: Player,
                         clientPlayer: Opponent));
             }
             //
-            GameTimer = new GameTimer(loop_function: MainLoop);
+            GameTimer = new GameTimer(loop_function: MainLoop, interval: 100, autoReset: false);
         }
 
         // Overriden methods:
@@ -63,7 +63,6 @@ namespace BattleCity.Model.Game
         private void StopTheGame()
         {
             GameTimer.StopTimer();
-            GameOver = true;
             // SOCKETS DISPOSE
             CLIENT.Close();
             CLIENT.Dispose();
@@ -71,6 +70,7 @@ namespace BattleCity.Model.Game
             SERVER.Dispose();
             // SIMPLE OUTPUT
             View.PrintGameOver(Won);
+            GameOver = true;
         }
 
         private bool CheckOpponentOnline()
@@ -123,6 +123,9 @@ namespace BattleCity.Model.Game
             // RENDERING THE MAP
             _npcTime = !_npcTime;
             Field.RenderCommon();
+
+            // RESTARTING THE TIMER
+            GameTimer.StartTimer();
         }
     }
 }

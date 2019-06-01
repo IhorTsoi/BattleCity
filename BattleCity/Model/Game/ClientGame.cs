@@ -57,10 +57,10 @@ namespace BattleCity.Model.Game
         }
         private void StopTheGame()
         {
-            GameOver = true;
             CLIENT.Close();
             CLIENT.Dispose();
             View.PrintGameOver(Won);
+            GameOver = true;
         }
 
 
