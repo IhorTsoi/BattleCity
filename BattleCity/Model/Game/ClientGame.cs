@@ -6,6 +6,7 @@ using System.Net;
 using System.Net.Sockets;
 using System.Threading.Tasks;
 using System.Threading;
+using BattleCity.Model.Components;
 
 namespace BattleCity.Model.Game
 {

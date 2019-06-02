@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace BattleCity.Model.Game.Components
+namespace BattleCity.Model.Components
 {
     struct GameState
     {

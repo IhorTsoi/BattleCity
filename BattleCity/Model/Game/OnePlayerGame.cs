@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Timers;
-using BattleCity.Model.Game.Components;
+using BattleCity.Model.Components;
 
 namespace BattleCity.Model.Game
 {
@@ -26,7 +26,7 @@ namespace BattleCity.Model.Game
             //
             Bullets = new List<Bullet>();
             //
-            GameTimer = new GameTimer(loop_function: MainLoop);
+            GameTimer = new GameTimer(loop_function: MainLoop, interval: 120);
         }
 
         // Overriden methods:

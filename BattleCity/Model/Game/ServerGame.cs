@@ -4,7 +4,7 @@ using System.Linq;
 using System.Timers;
 using System.Net;
 using System.Net.Sockets;
-using BattleCity.Model.Game.Components;
+using BattleCity.Model.Components;
 
 namespace BattleCity.Model.Game
 {

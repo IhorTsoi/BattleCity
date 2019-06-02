@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Timers;
 
-namespace BattleCity.Model.Game.Components
+namespace BattleCity.Model.Components
 {
     class GameTimer
     {

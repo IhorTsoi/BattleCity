@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using BattleCity.Model.Game.Components;
+using BattleCity.Model.Components;
 
 namespace BattleCity.Model.Game
 {
