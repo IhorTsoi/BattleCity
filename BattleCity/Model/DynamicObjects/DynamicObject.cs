@@ -3,14 +3,14 @@ using BattleCity.Model.Game;
 
 namespace BattleCity
 {
-    abstract class DynamicObject
+    abstract class DynamicObject : DamagableObject
     {
-        public (int Y, int X) Position { get; set; }
-        public Field Field { get; set; }
-        public Directions Direction { get; set; }
-        public IGame GGame { get; set; }
+        public Directions Direction { get; set; } = Directions.Left;
+        public IGame Game { get; set; }
 
-        public abstract void Die();
+        protected DynamicObject(int health, (int Y, int X) position, Field field) 
+            : base(health, position, field)
+        { }
 
         protected static (int, int) GetPosition((int Y, int X) position, Directions? direction)
         {

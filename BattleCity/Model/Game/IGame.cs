@@ -16,6 +16,7 @@ namespace BattleCity.Model.Game
         PlayerModel Player { get; set; }
         List<NPCModel> NPCs { get; set; }
         List<Bullet> Bullets { get; set; }
+        Field Field { get; set; }
         string LvlName { get; set; }
         bool GameOver { get; set; }
         bool Won { get; }

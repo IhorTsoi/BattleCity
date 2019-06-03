@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using BattleCity.Model.Components;
+using BattleCity.Model.DynamicObjects;
+using BattleCity.Views;
 
 namespace BattleCity.Model.Game
 {
@@ -13,6 +15,23 @@ namespace BattleCity.Model.Game
         public List<NPCModel> NPCs { get;set; }
         public List<Bullet> Bullets { get;set; }
         public Field Field { get; set; }
+
+        protected GameBase(TypeOfBlock[,] mapInfo)
+        {
+            Field = new Field(mapInfo: mapInfo);
+            for (int i = 0; i < Controller.FieldHeight; i++)
+            {
+                for (int j = 0; j < Controller.FieldWidth; j++)
+                {
+                    if (mapInfo[i,j] == TypeOfBlock.BrickWall)
+                    {
+                        Field.Map[i, j].Model = new BrickWall(
+                            position: (i,j),
+                            field: Field);
+                    }
+                }
+            }
+        }
 
         // game data:
         public string LvlName { get;set; }
@@ -31,7 +50,7 @@ namespace BattleCity.Model.Game
         public void StartGame()
         {
             Console.Clear();
-            Field.RenderCommon(firstRender: true);
+            FieldViewer.GetInstance().Render();
             StartLoop();
         }
         protected void InvokeNPCs(bool shoot = false)

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Newtonsoft.Json;
 using System.IO;
 using System.Linq;
+using BattleCity.Views;
 
 namespace BattleCity
 {
@@ -17,6 +18,10 @@ namespace BattleCity
         private const string LevelsDirectoryName = "levels";
         private const string StatisticsDirectoryName = "statistics";
         private const string MultiplayerLevelsDirectoryName = "multilevels";
+        private const string FieldViewDirectoryName = "fieldView";
+
+        private const string StatisticsFileName = "stats.json";
+        private const string FieldViewFileName = "fieldViewConfig.json";
 
         public const int FieldWidth = 60;
         public const int FieldHeight = 15;
@@ -28,8 +33,26 @@ namespace BattleCity
             LoadAllLevels();
             LoadAllMultiplayerLevels();
             LoadStats();
+            InitializeFieldView();
 
             Menu = new Menu((from level in GameLevels select level.Name).ToArray(), (from level in GameMLevels select level.Name).ToArray(), Statistics);
+        }
+        private static void InitializeFieldView()
+        {
+            if (!Directory.Exists(FieldViewDirectoryName))
+            {
+                return;
+            }
+
+            string fileContent = File.ReadAllText($"{FieldViewDirectoryName}\\{FieldViewFileName}");
+
+            // for console app:
+            FieldViewerConsole.Initialize(
+                JsonConvert.DeserializeObject<Dictionary<TypeOfBlock, BlockViewConsole>>(fileContent));
+
+            // for GUI app:
+            //FieldViewGUI.Initialize(
+            //     JsonConvert.DeserializeObject<Dictionary<TypeOfBlock, BlockViewGUI>>(fileContent));
         }
         private static void LoadAllLevels()
         {
@@ -43,7 +66,7 @@ namespace BattleCity
             for (int i = 0, length = files.Length; i < length; i++)
             {
 
-                Controller.GameLevels.Add(JsonConvert.DeserializeObject<Level>(File.ReadAllText(files[i])));
+                GameLevels.Add(JsonConvert.DeserializeObject<Level>(File.ReadAllText(files[i])));
             }
         }
         private static void LoadAllMultiplayerLevels()
@@ -68,8 +91,7 @@ namespace BattleCity
                 return;
             }
 
-            string file = "stats.json";
-            string fileContent = File.ReadAllText(StatisticsDirectoryName + "\\" + file);
+            string fileContent = File.ReadAllText($"{StatisticsDirectoryName}\\{StatisticsFileName}");
 
             Statistics = JsonConvert.DeserializeObject<User[]>(fileContent).ToList();
         }
@@ -79,7 +101,7 @@ namespace BattleCity
         {
             string json = JsonConvert.SerializeObject(Statistics.ToArray());
 
-            File.WriteAllText($"{StatisticsDirectoryName}\\stats.json", json);
+            File.WriteAllText($"{StatisticsDirectoryName}\\{StatisticsFileName}", json);
         }
     }
 }

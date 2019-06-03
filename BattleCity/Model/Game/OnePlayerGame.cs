@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Timers;
 using BattleCity.Model.Components;
+using BattleCity.Views;
 
 namespace BattleCity.Model.Game
 {
@@ -10,10 +11,9 @@ namespace BattleCity.Model.Game
 
         // Constructors:
         public OnePlayerGame(Level levelInfo)
+            : base(levelInfo.FieldInfo)
         {
             LvlName = levelInfo.Name;
-            //
-            Field = new Field(mapInfo: levelInfo.FieldInfo);
             //
             Player = new PlayerModel(position: levelInfo.PlayerInfo, field: Field, game: this);
             Player.DieEvent += () => GameState.Lose();
@@ -21,7 +21,7 @@ namespace BattleCity.Model.Game
             NPCs = new List<NPCModel>();
             foreach ((int, int) position in levelInfo.NPCsInfo)
             {
-                NPCs.Add(new NPCModel(position: position, field: Field, player: Player, game: this));
+                NPCs.Add(new NPCModel( position, Field, Player, game: this));
             }
             //
             Bullets = new List<Bullet>();
@@ -68,7 +68,7 @@ namespace BattleCity.Model.Game
             
             // RENDERING THE MAP
             _npcTime = !_npcTime;
-            Field.RenderCommon();
+            FieldViewer.GetInstance().Render();
 
 
             // CHECK IF THE GAME IS OVER

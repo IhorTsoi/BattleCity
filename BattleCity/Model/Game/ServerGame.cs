@@ -5,6 +5,7 @@ using System.Timers;
 using System.Net;
 using System.Net.Sockets;
 using BattleCity.Model.Components;
+using BattleCity.Views;
 
 namespace BattleCity.Model.Game
 {
@@ -122,7 +123,7 @@ namespace BattleCity.Model.Game
 
             // RENDERING THE MAP
             _npcTime = !_npcTime;
-            Field.RenderCommon();
+            FieldViewer.GetInstance().Render();
 
             // RESTARTING THE TIMER
             GameTimer.StartTimer();

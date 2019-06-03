@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using BattleCity.Model.Game;
+using BattleCity.Views;
 
 namespace BattleCity
 {
@@ -26,23 +27,62 @@ namespace BattleCity
 
         private static IGame Game { get; set; }
         private static Menu Menu { get; set; }
-        
 
         static void Main(string[] args)
         {
+            #region creating fieldviewconfig.json
+
+            /*
+            Dictionary<TypeOfBlock, BlockViewConsole> blocksView = new Dictionary<TypeOfBlock, BlockViewConsole>
+            {
+                [TypeOfBlock.Player] = new BlockViewConsole(
+                symbols: new char[] { '◄', '▲', '►', '▼' },
+                backGroundColor: ConsoleColor.DarkGray,
+                foreGroundColor: ConsoleColor.Black),
+                //
+                [TypeOfBlock.NPC] = new BlockViewConsole(
+                symbols: new char[] { '←', '↑', '→', '↓' },
+                backGroundColor: ConsoleColor.DarkGray,
+                foreGroundColor: ConsoleColor.Black),
+                //
+                [TypeOfBlock.Bullet] = new BlockViewConsole(
+                symbols: new char[] { 'ᴏ' },
+                backGroundColor: ConsoleColor.DarkGray,
+                foreGroundColor: ConsoleColor.DarkRed),
+                //
+                [TypeOfBlock.EmptyCell] = new BlockViewConsole(
+                symbols: new char[] { ' ' },
+                backGroundColor: ConsoleColor.DarkGray,
+                foreGroundColor: ConsoleColor.DarkGray),
+                //
+                [TypeOfBlock.BrickWall] = new BlockViewConsole(
+                symbols: new char[] { '□' },
+                backGroundColor: ConsoleColor.DarkBlue,
+                foreGroundColor: ConsoleColor.DarkGray),
+                //
+                [TypeOfBlock.Wall] = new BlockViewConsole(
+                symbols: new char[] { '#' },
+                backGroundColor: ConsoleColor.Black,
+                foreGroundColor: ConsoleColor.Black),
+            };
+            string json = Newtonsoft.Json.JsonConvert.SerializeObject(blocksView);
+            System.IO.File.WriteAllText($"{FieldViewDirectoryName}\\{FieldViewFileName}", json);
+            */
+
+            #endregion
+
+
             View.ConsoleSettings();
             InitializeData();
             GreetUser();
 
-            while (HandleInput()) ;
+            while (HandleInput(OnKeyPress())) ;
         }
-        
-        
 
-        private static bool HandleInput()
+        private static ConsoleKey OnKeyPress() => Console.ReadKey(true).Key;
+
+        private static bool HandleInput(ConsoleKey Cki)
         {
-            ConsoleKey Cki = Console.ReadKey(true).Key;
-
             switch (ProgramStatus)
             {
                 #region Menu case

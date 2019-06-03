@@ -1,4 +1,5 @@
-﻿using System;
+﻿using BattleCity.Views;
+using System;
 using System.Collections.Generic;
 using System.Net.Sockets;
 using System.Text;
@@ -16,10 +17,10 @@ namespace BattleCity.Model.Game
 
         // Constructor:
         public MultiPlayerGameBase(MultiplayerLevel multiplayerLevel)
+            : base(multiplayerLevel.FieldInfo)
         {
             LvlName = multiplayerLevel.Name;
 
-            Field = new Field(mapInfo: multiplayerLevel.FieldInfo);
             Bullets = new List<Bullet>();
 
             ConnectToOpponent();

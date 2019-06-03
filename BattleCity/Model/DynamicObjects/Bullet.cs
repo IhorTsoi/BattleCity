@@ -7,64 +7,83 @@ namespace BattleCity
 {
     class Bullet : DynamicObject
     {
-        #region Constructors
+        private int damageValue;
 
-        public Bullet() { }
-
-        public Bullet ((int, int) position, Field field, Directions direction, IGame game)
+        private Bullet ((int Y, int X) position, Field field, Directions direction, IGame game, int damageVal)
+            : base(health: 1, position, field)
         {
-            Position = position;
-            Field = field;
+            damageValue = damageVal;
             Direction = direction;
-            GGame = game;
-            Field.Map[position.Item1, position.Item2].Model = this;
-
+            Game = game;
+            Field.Map[position.Y, position.X].Model = this;
         }
 
-        #endregion
+
+        public static void CreateBullet((int Y, int X) position, Directions direction, int damageVal, IGame game)
+        {
+            Field field = game.Field;
+            Block block = field[position.Y, position.X];
+            //
+            if (block.Type == TypeOfBlock.EmptyCell)
+            {
+                field.AddBlock(
+                    position, TypeOfBlock.Bullet);
+                //
+                game.Bullets.Add(
+                    new Bullet(position, field, direction, game, damageVal));
+            }
+            else if(block.Model == null)
+            {
+                //
+                // only non-destructable objects 
+                // don't have model
+                //
+                return;
+            }
+            else
+            {
+                block.Model.GetDamaged(damageVal);
+            }
+        }
+
 
         public void MoveBullet ()
         {
-            (int Y, int X) nextPosition = GetPosition(position: Position, direction: Direction);
-
-
-            switch (Field[ nextPosition.Y, nextPosition.X ].Type)
+            (int Y, int X) nextPosition = GetPosition(Position, Direction);
+            //
+            Block block = Field[nextPosition];
+            TypeOfBlock type = block.Type;
+            DamagableObject model = block.Model;
+            //
+            //
+            if (type == TypeOfBlock.EmptyCell)
             {
-                case TypeOfBlock.EmptyCell:
-                    Field[nextPosition.Y, nextPosition.X] = Field[Position.Y, Position.X];
-                    Field.Map[Position.Y, Position.X].TurnToEmpty();
-
-                    Position = nextPosition;
-                    return;
-                // EmptyCell is the only forwarding block that DOES NOT KILL the bullet.
-                // "return" above is VITAL !
-                    
-                case TypeOfBlock.Player:
-                    ((PlayerModel)Field.Map[nextPosition.Y, nextPosition.X].Model).Health--;
-                    break;
-
-                case TypeOfBlock.NPC:
-                    ((NPCModel)Field.Map[nextPosition.Y, nextPosition.X].Model).Health--;
-                    break;
-
-                case TypeOfBlock.Bullet:
-                    ((Bullet)Field.Map[nextPosition.Y, nextPosition.X].Model).Die();
-                    break;
-
-                case TypeOfBlock.BrickWall:
-                    Field.Map[nextPosition.Y, nextPosition.X].Health--;
-                    break;
-                default:
-                    break;
+                Field.MoveBlock(
+                    movingObj: this,
+                    nextPosition
+                    );
+                Position = nextPosition;
             }
-            
-            Die();
+            else if(model == null)
+            {
+                //
+                // only non-destructable objects 
+                // don't have model
+                //
+                Die();
+            }
+            else
+            {
+                model.GetDamaged(damageValue);
+                Die();
+            }
         }
+
 
         public override void Die ()
         {
-            Field.Map[Position.Y, Position.X].TurnToEmpty();
-            GGame.Bullets.Remove(this);
+            Field.DeleteBlock(Position);
+            Game.Bullets.Remove(this);
         }
     }
 }

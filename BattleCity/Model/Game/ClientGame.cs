@@ -7,6 +7,7 @@ using System.Net.Sockets;
 using System.Threading.Tasks;
 using System.Threading;
 using BattleCity.Model.Components;
+using BattleCity.Views;
 
 namespace BattleCity.Model.Game
 {
@@ -118,7 +119,7 @@ namespace BattleCity.Model.Game
                 
                 // RENDERING THE MAP
                 _npcTime = !_npcTime;
-                Field.RenderCommon();
+                FieldViewer.GetInstance().Render();
             }
         }
     }

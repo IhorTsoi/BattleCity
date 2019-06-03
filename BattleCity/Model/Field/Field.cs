@@ -1,4 +1,6 @@
-﻿using System;
+﻿using BattleCity.Model.Game;
+using BattleCity.Views;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -7,64 +9,90 @@ namespace BattleCity
     class Field
     {
         public Block[,] Map;
-        private string[,] _PreviousMap = new string[Controller.FieldHeight, Controller.FieldWidth];
+        private FieldViewer FieldViewer;
 
         public Block this[int Y, int X]
         {
             get => Map[Y, X];
-            set => Map[Y, X] = value;
+            private set => Map[Y, X] = value;
         }
+        public Block this[(int Y, int X) pos]
+        {
+            get => Map[pos.Y, pos.X];
+            private set => Map[pos.Y, pos.X] = value;
+        }
+
 
         public Field (TypeOfBlock[,] mapInfo)
         {
             Map = new Block[Controller.FieldHeight, Controller.FieldWidth];
+            FieldViewer = FieldViewer.GetInstance();
+
             for(int i = 0; i < Controller.FieldHeight; i++)
             {
                 for (int j = 0; j < Controller.FieldWidth; j++)
                 {
-                    Map[i, j] = new Block(mapInfo[i,j]);
+                    AddBlock((i, j), mapInfo[i, j]);
                 }
             }
         }
 
 
-        private void RenderIteration(int i, int j)
+        #region Update mapModel & view
+
+        public void AddBlock((int Y, int X) pos, TypeOfBlock type, Directions direction = Directions.Left)
         {
-            if (Map[i, j].Symbol != _PreviousMap[i, j])
-            {
-                Console.BackgroundColor = Map[i, j].BgColor;
-                Console.ForegroundColor = Map[i, j].FgColor;
-
-                Console.SetCursorPosition(left: j, top: i);
-                Console.Write(Map[i, j].Symbol);
-
-                _PreviousMap[i, j] = Map[i, j].Symbol;
-            }
+            //
+            // Updating mapModel:
+            //
+            this[pos] = new Block(type);
+            //
+            // Requesting view update for one cells:
+            //
+            FieldViewer.Update(pos, type, direction);
         }
 
-        public void RenderCommon(bool firstRender = false)
+        public void MoveBlock(DynamicObject movingObj, (int Y, int X) toCoords, Directions direction = Directions.Left)
         {
-            for (int i = 0; i < Controller.FieldHeight; i++)
-            {
-                for (int j = 0; j < Controller.FieldWidth; j++)
-                {
-                    if (firstRender)
-                        FirstRenderIteration(i, j);
-                    else
-                        RenderIteration(i, j);
-                }
-                if (firstRender)
-                    Console.Write('\n');
-            }
+            (int Y, int X) fromPos = movingObj.Position;
+            TypeOfBlock movingObjType = this[fromPos].Type;
+            //
+            // Updating mapModel:
+            //
+            this[toCoords] = this[fromPos];
+            Map[fromPos.Y, fromPos.X].TurnToEmpty();
+            //
+            // Requesting view update for two cells:
+            //
+            FieldViewer.Update(fromPos, TypeOfBlock.EmptyCell);
+            FieldViewer.Update(toCoords, movingObjType, direction);
         }
 
-        public void FirstRenderIteration(int i, int j)
+        public void DeleteBlock((int Y, int X) pos)
         {
-            Console.BackgroundColor = Map[i, j].BgColor;
-            Console.ForegroundColor = Map[i, j].FgColor;
-
-            Console.Write(Map[i, j].Symbol);
-            _PreviousMap[i, j] = Map[i, j].Symbol;
+            //
+            // Updating mapModel:
+            //
+            Map[pos.Y, pos.X].TurnToEmpty();
+            //
+            // Requesting view update for one cell:
+            //
+            FieldViewer.Update(pos, TypeOfBlock.EmptyCell);
         }
+
+        public void RotateBlock((int Y, int X) pos, Directions direction)
+        {
+            TypeOfBlock blockType = this[pos].Type;
+            //
+            // Updating mapModel:
+            //
+            // (not updated)
+            //
+            // Requesting view update for one cell:
+            //
+            FieldViewer.Update(pos, blockType, direction);
+        }
+
+        #endregion
     }
 }

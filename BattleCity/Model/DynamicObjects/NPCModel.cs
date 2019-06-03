@@ -10,36 +10,17 @@ namespace BattleCity
     class NPCModel : DynamicObject
     {
         // Properties:
-        public PlayerModel Player { get; set; }
-        private byte _health = 3;
-        public byte Health
-        {
-            get { return _health; }
-            set
-            {
-                if (value <= 0)
-                {
-                    Die();
-                }
-                else
-                {
-                    _health = value;
-                }
-            }
-        }
+        protected PlayerModel Player { get; set; }
         private bool _nextShoot = false;
-        readonly RollStack<Directions> path = new RollStack<Directions>(length: 2);
+        private readonly RollStack<Directions> path = new RollStack<Directions>(length: 2);
 
         // Constructors:
-        public NPCModel() { }
-        //
+
         public NPCModel((int Y, int X) position, Field field, PlayerModel player, IGame game)
+            : base(health: 3, position, field)
         {
-            Position = position;
-            Direction = Directions.Down;
-            Field = field;
             Player = player;
-            GGame = game;
+            Game = game;
             Field.Map[position.Y, position.X].Model = this;
         }
 
@@ -86,8 +67,10 @@ namespace BattleCity
                 }
                 else
                 {
-                    Field[Y, X] = Field[Position.Y, Position.X];
-                    Field.Map[Position.Y, Position.X].TurnToEmpty();
+                    Field.MoveBlock(
+                        movingObj: this,
+                        toCoords: (Y, X),
+                        Direction);
                     Position = (Y, X);
                     path.Pop();
                 }
@@ -433,35 +416,9 @@ namespace BattleCity
 
         private void Shoot()
         {
-            (int Y, int X) = GetPosition(Position, Direction);
+            (int Y, int X) nextPosition = GetPosition(Position, Direction);
 
-            switch (Field[Y, X].Type)
-            {
-                case TypeOfBlock.EmptyCell:
-                    Field[Y, X] = new Block(TypeOfBlock.Bullet, model: null, direction: Direction);
-                    GGame.Bullets.Add(new Bullet(( Y, X ), Field, Direction, GGame));
-                    break;
-
-                case TypeOfBlock.Player:
-                    ((PlayerModel)Field.Map[Y, X].Model).Health--;
-                    break;
-
-                case TypeOfBlock.NPC:
-                    ((NPCModel)Field.Map[Y, X].Model).Health--;
-                    break;
-
-                case TypeOfBlock.Bullet:
-                    ((Bullet)Field.Map[Y, X].Model).Die();
-                    break;
-
-                case TypeOfBlock.BrickWall:
-                    Field.Map[Y, X].Health--;
-                    break;
-
-                default:
-                    // never change this line !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-                    break;
-            }
+            Bullet.CreateBullet(nextPosition, Direction, damageVal: 1, Game);
         }
 
 
@@ -469,7 +426,7 @@ namespace BattleCity
         // Private methods:
         private void RotateSelf(Directions direction)
         {
-            Field.Map[ Position.Y, Position.X ].Rotate( direction, type: TypeOfBlock.NPC );
+            Field.RotateBlock(Position, direction);
             Direction = direction;
         }
 
@@ -518,8 +475,8 @@ namespace BattleCity
 
         public override void Die()
         {
-            Field.Map[Position.Y, Position.X].TurnToEmpty();
-            GGame.NPCs.Remove(this);
+            Field.DeleteBlock(Position);
+            Game.NPCs.Remove(this);
         }
     }
 }
