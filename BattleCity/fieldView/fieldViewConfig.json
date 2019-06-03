@@ -1,0 +1,32 @@
+{
+  "Player": {
+    "Symbols": [ "◄", "▲", "►", "▼" ],
+    "BackGroundColor": 8,
+    "ForeGroundColor": 0
+  },
+  "NPC": {
+    "Symbols": [ "←", "↑", "→", "↓" ],
+    "BackGroundColor": 8,
+    "ForeGroundColor": 0
+  },
+  "Bullet": {
+    "Symbols": [ "ᴏ" ],
+    "BackGroundColor": 8,
+    "ForeGroundColor": 4
+  },
+  "EmptyCell": {
+    "Symbols": [ " " ],
+    "BackGroundColor": 8,
+    "ForeGroundColor": 8
+  },
+  "BrickWall": {
+    "Symbols": [ "□" ],
+    "BackGroundColor": 1,
+    "ForeGroundColor": 8
+  },
+  "Wall": {
+    "Symbols": [ "#" ],
+    "BackGroundColor": 0,
+    "ForeGroundColor": 0
+  }
+}
